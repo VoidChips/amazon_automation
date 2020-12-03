@@ -38,14 +38,9 @@ if 'Amazon.com: Online Shopping' not in browser.title:
     passwordBox = browser.find_element_by_name('password')
     enterText(browser, passwordBox, password)
 
-# approve sign in attempt during wait
+# approve sign in attempt
 # manually do bot verification and two-step authentication
-print('Authenticate within 30 seconds...')
-time.sleep(10)
-print('20 seconds left...')
-time.sleep(10)
-print('10 seconds left...')
-time.sleep(10)
+input('Enter any key after the authentication is done. ')
 
 # check if signing in was successful
 accountBtn = browser.find_element_by_id('nav-link-accountList')
@@ -53,6 +48,8 @@ assert 'Hello, Sign in' not in accountBtn.text
 
 # browser.get('https://www.amazon.com/dp/B08FC6MR62?tag=nismain-20&linkCode=ogi&th=1&psc=1')
 browser.get(productPage)
+
+print('The page will refresh every 30 seconds until the item becomes available.')
 
 # put item in cart
 # keep refreshing the page if the item is out of stock
@@ -64,8 +61,6 @@ while True:
         input('Enter any key to quit. ')
         break
     except Exception as e:
-        print(e)
-        print('Out of stock... refreshing...')
         time.sleep(30)
         browser.refresh()
 
