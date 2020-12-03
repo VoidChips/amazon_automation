@@ -7,10 +7,10 @@ import time
 def enterText(driver, textbox, text):
     time.sleep(0.25)
     textbox.send_keys(text)
-    time.sleep(1)
     textbox.send_keys(Keys.RETURN)
 
 productPage = input('Please enter the Amazon link to the product: ')
+buyNowBtnExists = input('Does the product have the Buy Now button? If not, the Add to Cart button will be used instead. (y/n): ') == 'y'
 refreshInterval = input('Please enter how often the page will refresh in seconds: ')
 
 # open the browser and open the link
@@ -39,30 +39,47 @@ if 'Two-Step Verification' not in browser.title:
     passwordBox = browser.find_element_by_name('password')
     enterText(browser, passwordBox, password)
 
-# approve sign in attempt
-# manually do bot verification and two-step authentication
-input('Enter any key after the authentication is done. ')
+# wait for the home page redirection
+while 'Amazon.com' not in browser.title:
+    continue
 
 # check if signing in was successful
 accountBtn = browser.find_element_by_id('nav-link-accountList')
 assert 'Hello, Sign in' not in accountBtn.text
 
-# browser.get('https://www.amazon.com/dp/B08FC6MR62?tag=nismain-20&linkCode=ogi&th=1&psc=1')
-browser.get(productPage)
+# turn on 1-Click
+if buyNowBtnExists:
+    browser.get('https://www.amazon.com/cpe/yourpayments/settings/manageoneclick?ref_=v1c_title')
+    switch = browser.find_element_by_class_name('a-switch-control')
+    switch.click()
+    time.sleep(1)
+
+browser.get(productPage) # go to the product page
 
 print('The page will refresh every ' + refreshInterval + ' seconds until the item becomes available.')
 
-# put item in cart
+# buy or put item in cart
 # keep refreshing the page if the item is out of stock
 while True:
     try:
-        buyBtn = browser.find_element_by_id('buy-now-button')
+        buyBtn = browser.find_element_by_id('buy-now-button') if buyNowBtnExists else browser.find_element_by_id('add-to-cart-button')
         buyBtn.click()
-        print('In checkout screen. Please proceed with the purchase.')
-        input('Enter any key to quit. ')
+        time.sleep(3)
+        browser.switch_to.frame(browser.find_element_by_id('turbo-checkout-iframe'))
+        buyBtn = browser.find_element_by_id('turbo-checkout-pyo-button')
+        buyBtn.click() # buy the product
+
+        if buyNowBtnExists:
+            print('Purchase successful!')
+        else:
+            print('In checkout screen. Please proceed with the purchase.')
         break
     except Exception as e:
+        print(e)
         time.sleep(int(refreshInterval))
         browser.refresh()
 
+time.sleep(2)
+browser.get('https://www.amazon.com/gp/css/order-history?ref_=nav_orders_first')
+input('Press any key to quit. ')
 browser.close()
