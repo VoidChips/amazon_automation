@@ -32,9 +32,9 @@ emailBox = browser.find_element_by_name('email')
 enterText(browser, emailBox, email)
 passwordBox = browser.find_element_by_name('password')
 enterText(browser, passwordBox, password)
-browser.implicitly_wait(1)
+time.sleep(1)
 # enter the password again if it asks again
-if 'Amazon.com: Online Shopping' not in browser.title:
+if 'Two-Step Verification' not in browser.title:
     passwordBox = browser.find_element_by_name('password')
     enterText(browser, passwordBox, password)
 
