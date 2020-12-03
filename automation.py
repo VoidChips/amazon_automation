@@ -66,7 +66,7 @@ while True:
     except Exception as e:
         print(e)
         print('Out of stock... refreshing...')
-        time.sleep(2)
+        time.sleep(30)
         browser.refresh()
 
 browser.close()
