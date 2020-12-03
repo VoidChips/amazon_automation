@@ -50,7 +50,7 @@ assert 'Hello, Sign in' not in accountBtn.text
 # browser.get('https://www.amazon.com/dp/B08FC6MR62?tag=nismain-20&linkCode=ogi&th=1&psc=1')
 browser.get(productPage)
 
-print('The page will refresh every 30 seconds until the item becomes available.')
+print('The page will refresh every ' + refreshInterval + ' seconds until the item becomes available.')
 
 # put item in cart
 # keep refreshing the page if the item is out of stock
