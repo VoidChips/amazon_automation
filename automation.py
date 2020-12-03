@@ -11,6 +11,7 @@ def enterText(driver, textbox, text):
     textbox.send_keys(Keys.RETURN)
 
 productPage = input('Please enter the Amazon link to the product: ')
+refreshInterval = input('Please enter how often the page will refresh in seconds: ')
 
 # open the browser and open the link
 dir = os.getcwd()
@@ -61,7 +62,7 @@ while True:
         input('Enter any key to quit. ')
         break
     except Exception as e:
-        time.sleep(30)
+        time.sleep(int(refreshInterval))
         browser.refresh()
 
 browser.close()
