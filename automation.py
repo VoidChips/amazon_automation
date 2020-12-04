@@ -40,12 +40,8 @@ if 'Two-Step Verification' not in browser.title:
     enterText(browser, passwordBox, password)
 
 # wait for the home page redirection
-while 'Amazon.com' not in browser.title:
+while len(browser.find_elements_by_id('nav-link-accountList')) == 0:
     continue
-
-# check if signing in was successful
-accountBtn = browser.find_element_by_id('nav-link-accountList')
-assert 'Hello, Sign in' not in accountBtn.text
 
 # turn on 1-Click
 if buyNowBtnExists:
